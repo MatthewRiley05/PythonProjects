@@ -107,6 +107,14 @@ wastedEndingText = r"""
     ░          ░  ░      ░              ░  ░   ░          ░  ░         ░    ░     ░           ░       ░ 
                                              ░                            ░                             
 """
+escapedEndingText = r'''
+   ___                             _ __              _              ___               _      _              __ _  
+  | __|    ___     __     __ _    | '_ \   ___    __| |     o O O  | __|   _ _     __| |    (_)    _ _     / _` | 
+  | _|    (_-<    / _|   / _` |   | .__/  / -_)  / _` |    o       | _|   | ' \   / _` |    | |   | ' \    \__, | 
+  |___|   /__/_   \__|_  \__,_|   |_|__   \___|  \__,_|   TS__[O]  |___|  |_||_|  \__,_|   _|_|_  |_||_|   |___/  
+_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
+"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'./o--000'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
+'''
 stupidEndingText = r"""
    _                               __ _               _     _ ___     __          _ _             
   /_\  _ __ ___  /\_/\___  _   _  / _\ |_ _   _ _ __ (_) __| / _ \   /__\ __   __| (_)_ __   __ _ 
@@ -323,7 +331,7 @@ def shoutForHelp():
     if shoutAction == "1":
         coverHerMouth()
     elif shoutAction == "2":
-        return None
+        runAway()
     
 def runAway():
     typeWriterEffect(textSpeed, "\nYou decide to escape while you still can.")
@@ -339,7 +347,8 @@ def runAway():
     time.sleep(1)
     runAwayChoice = input(typeWriterEffect(textSpeed, "\nWhich will you choose? "))
     if runAwayChoice == "1":
-        typeWriterEffect(textSpeed, "\nYou run towards one of the school's toilet and hide inside the stall to wait for the situation to calm down.")
+        typeWriterEffect(textSpeed, "\nYou decide to run to a toilet stall and wait for the situation to calm down.")
+        typeWriterEffect(textSpeed, "\nYou run towards one of the further school toilets and hide inside the stall, locking the door behind you.")
         typeWriterEffect(textSpeed, "\nYou hear footsteps fast approaching from the hallway, the door opens and multiple teachers come in.")
         typeWriterEffect(textSpeed, "\nYou are caught and taken to the principal's office while authorities are called.")
         shitEnding()
@@ -349,9 +358,22 @@ def runAway():
         typeWriterEffect(textSpeed, "\nYou are now a fugitive, running away from the authorities.")
         return None
     elif runAwayChoice == "3":
-        typeWriterEffect(textSpeed, "\nYou decide to run to the school's entrance and escape to another location.")
-        typeWriterEffect(textSpeed, "\nYou successfully escape the school and run away to another location.")
-        typeWriterEffect(textSpeed, "\nYou are now a fugitive, running away from the authorities.")
+        guardStopsYou()
+        
+def guardStopsYou():
+    typeWriterEffect(textSpeed, "\nYou decide to run to the school's entrance and escape to another location.")
+    typeWriterEffect(textSpeed, "\nYou run out of the classroom, running through the hallways going past any students and teachers.")
+    typeWriterEffect(textSpeed, "\nYou are finally approaching the school entrance, but you are stopped by the school's security guard.")
+    typeWriterEffect(textSpeed, "\n\n\nHe doesn't know the situation yet so what excuse will you give him?\n")
+    time.sleep(1)
+    print("\n1. Tell him that you are feeling sick and need to go home")
+    time.sleep(1)
+    print("\n2. Tell him that there has been a terrorist attack in-campus")
+    time.sleep(1)
+    print("\n3. Tell him that you're late for a date with the principal's daughter")
+    time.sleep(1)
+    runAwayChoice = input(typeWriterEffect(textSpeed, "\nWhich will you choose? "))
+    if runAwayChoice == "1":
         return None
 
 def coverHerMouth():
@@ -422,7 +444,10 @@ def shitEnding():
     typeWriterEffect(textSpeed, "\nLMAO, what did you think would happen?")
     typeWriterEffect(textSpeed, "\nYou really thought they wouldn't find you? In the damn toilet?")
     typeWriterEffect(textSpeed, "\nYou deserve to not only go to jail but also to eat shit.\n")
-    typeWriterEffect(0.001, shitEndingText)
+    typeWriterEffect(0.01, shitEndingText)
+    
+def escapedEnding():
+    typeWriterEffect(0.01, jailEndingText)
 
 def jailEnding():
     typeWriterEffect(textSpeed, "\nYou were arrested and taken to jail for your actions.")
