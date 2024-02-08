@@ -3,6 +3,7 @@ import sys, subprocess
 import time
 from time import sleep
 from rich.console import Console
+import rich
 
 #ASCII Art and Text
 gameMenuText = r"""
@@ -24,6 +25,11 @@ gameMenuText = r"""
 ║║                                                                                                                                 ║║
 ║╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝║
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+"""
+developerOptionsText = r"""
+ ______  _______ _    _ _______         _____   _____  _______  ______       _____   _____  _______ _____  _____  __   _ _______
+ |     \ |______  \  /  |______ |      |     | |_____] |______ |_____/      |     | |_____]    |      |   |     | | \  | |______
+ |_____/ |______   \/   |______ |_____ |_____| |       |______ |    \_      |_____| |          |    __|__ |_____| |  \_| ______|                                                                                                                               
 """
 loadingSplashScreen = r"""
 ⢐⢐⢐⢐⠔⡨⢐⢐⠔⡡⠢⡑⡌⡢⡱⡘⡌⢎⢢⠱⡊⡢⡑⢔⠡⢂⢂⢂⢂⠢⠡⡂⠢⡡⢂⠕⡨⠢⡑⡐⢅⠢⠡⡂⡢⠡⡂⠪⡐⠌⢔⢐⠅⡪⡐⡅⡪⡔⢕⠱⠡⡃⡕⣌⢶⣕⢷⢝⣵⡫⡇⡂⠪⡐⢅
@@ -63,6 +69,15 @@ loadingSplashScreen = r"""
 ⠄⠂⠁⠄⠂⢀⠂⡐⢀⠂⠈⠄⠂⠂⠬⠐⢃⠂⡊⠹⣐⠨⡪⠨⡈⡂⡪⠨⡂⢕⣨⣨⣢⣦⣥⡧⣵⢰⢘⡙⢗⠿⣞⣯⣿⣳⢯⡯⣯⢯⢪⢂⠠⢀⡦⠢⢐⠠⡈⠠⠄⠂⠈⠄⢀⠠⠄⢐⠄⠠⠄⠄⠄⠄⡀
 ⠄⢈⠄⠂⠈⢀⠠⠄⠄⠠⠡⠠⠑⠨⠐⠨⡐⠡⡂⠄⡣⠐⠅⠕⠬⢦⢗⢿⡻⣻⣫⡯⣷⣳⡷⣿⣻⣟⣯⣷⣧⣯⣪⢳⣛⢾⣟⣿⢽⣻⢸⡂⠄⢰⢋⠸⡸⡘⡀⢅⢊⠄⡁⡈⡀⠠⠐⠄⠂⢀⠐⠄⡐⡠⡐
 ⠄⡀⡀⠂⠌⠠⠠⠡⠈⢌⠨⠈⠄⠨⡀⠅⠌⠌⠄⠂⡐⠨⡈⢪⠨⡂⡣⠳⣟⣿⡽⣿⡽⣷⢿⣻⡽⣯⣻⢽⣺⡾⣾⢷⣵⣱⢸⢩⠫⢮⢪⠆⠐⢸⡂⢪⠢⡊⠔⡐⡑⢌⢪⢐⢔⢐⠐⢈⠄⠠⠢⡑⢅⠢⡊
+"""
+shitEndingText = r"""
+   .---. .-. .-.,-. _______   ,---.  .-. .-. ,'|"\   ,-..-. .-.  ,--,   
+  ( .-._)| | | ||(||__   __|  | .-'  |  \| | | |\ \  |(||  \| |.' .'    
+ (_) \   | `-' |(_)  )| |     | `-.  |   | | | | \ \ (_)|   | ||  |  __ 
+ _  \ \  | .-. || | (_) |     | .-'  | |\  | | |  \ \| || |\  |\  \ ( _)
+( `-'  ) | | |)|| |   | |     |  `--.| | |)| /(|`-' /| || | |)| \  `-) )
+ `----'  /(  (_)`-'   `-'     /( __.'/(  (_)(__)`--' `-'/(  (_) )\____/ 
+        (__)                 (__)   (__)               (__)    (__)     
 """
 safeEndingText = r"""
   ________            _____       ____        ______          ___            
@@ -110,6 +125,7 @@ end = "\nThank you for playing Gakko Kinesis. Goodbye.\n"
 name = ""
 characterName = "Girl"
 textSpeed = 0.05
+console = Console()
 
 #Effect Functions
 def typeWriterEffect(textSpeed, word):
@@ -154,6 +170,52 @@ def settingsPage():
     else:
         typeWriterEffect("\nSetting applied successfuly.\n")
         gameMenu()
+
+def developerOptions():
+    global textSpeed
+    console.print(f"[bold green]{developerOptionsText}[/bold green]")
+    print("\nText Speed will be set to instant.")
+    textSpeed = 0
+    time.sleep(1)
+    print("\nWhich scene would you like to skip to?")
+    time.sleep(0.5)
+    print("\n1. Initial Conversation")
+    time.sleep(0.5)
+    print("\n2. Action Scene 1")
+    time.sleep(0.5)
+    print("\n3. Flustered Scene")
+    time.sleep(0.5)
+    print("\n4. Shouts for Help Scene") 
+    time.sleep(0.5)
+    print("\n5. Run Away Scene")
+    time.sleep(0.5)
+    print("\n6. Small Talk Scene")
+    time.sleep(0.5)
+    skipChoice = input(typeWriterEffect(textSpeed, "\nChoose a number: "))
+    if skipChoice == "1":
+        applyDeveloperOptions()
+        introductoryConversation()
+    elif skipChoice == "2":
+        applyDeveloperOptions()
+        actionScene1()
+    elif skipChoice == "3":
+        applyDeveloperOptions()
+        flustered()
+    elif skipChoice == "4":
+        applyDeveloperOptions()
+        shoutForHelp()
+    elif skipChoice == "5":
+        applyDeveloperOptions()
+        runAway()
+    elif skipChoice == "6":
+        applyDeveloperOptions()
+        smallTalk()
+        
+def applyDeveloperOptions():
+    with console.status("[bold green]Developer options being applied...[/bold green]", spinner="material") as status:
+        time.sleep(3)
+    console.print("\n[bold green]Developer options applied successfully.[bold green]\n")
+    time.sleep(1)
 
 #Story Functions
 def gameStart():
@@ -262,6 +324,35 @@ def shoutForHelp():
         coverHerMouth()
     elif shoutAction == "2":
         return None
+    
+def runAway():
+    typeWriterEffect(textSpeed, "\nYou decide to escape while you still can.")
+    typeWriterEffect(textSpeed, "\nAs you run out the classroom, you still hear her screams echoing through the empty hallways.")
+    typeWriterEffect(textSpeed, "\nGuilt and fear consume you as you run away from the scene.")
+    typeWriterEffect(textSpeed, "\n\n\nDespite this difficult mental situation, you must decide where to escape to: \n")
+    time.sleep(1)
+    print("\n1. Hide inside the school toilet and wait for the situation to calm down")
+    time.sleep(1)
+    print("\n2. Jump out of the window to make a quick escape")
+    time.sleep(1)
+    print("\n3. Run to the school's entrance and escape to another location")
+    time.sleep(1)
+    runAwayChoice = input(typeWriterEffect(textSpeed, "\nWhich will you choose? "))
+    if runAwayChoice == "1":
+        typeWriterEffect(textSpeed, "\nYou run towards one of the school's toilet and hide inside the stall to wait for the situation to calm down.")
+        typeWriterEffect(textSpeed, "\nYou hear footsteps fast approaching from the hallway, the door opens and multiple teachers come in.")
+        typeWriterEffect(textSpeed, "\nYou are caught and taken to the principal's office while authorities are called.")
+        shitEnding()
+    elif runAwayChoice == "2":
+        typeWriterEffect(textSpeed, "\nYou decide to jump out of the window to make a quick escape.")
+        typeWriterEffect(textSpeed, "\nYou successfully escape the school and run away to another location.")
+        typeWriterEffect(textSpeed, "\nYou are now a fugitive, running away from the authorities.")
+        return None
+    elif runAwayChoice == "3":
+        typeWriterEffect(textSpeed, "\nYou decide to run to the school's entrance and escape to another location.")
+        typeWriterEffect(textSpeed, "\nYou successfully escape the school and run away to another location.")
+        typeWriterEffect(textSpeed, "\nYou are now a fugitive, running away from the authorities.")
+        return None
 
 def coverHerMouth():
     typeWriterEffect(textSpeed, "\nYou decide to cover her mouth to stop her from screaming.")
@@ -326,10 +417,16 @@ def animeSmallTalk():
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Heyyyy, no spoilers! I'm only at the part where they're at Dressrosa.'")
         typeWriterEffect(textSpeed, "\nYou: 'HAHAHAHAHAHA, I'm sorry but just keep watching I promise it becomes so good!'\n")
         typeWriterEffect(textSpeed, "\nBoth of you continue to talk about One Piece as the sun starts to set...\n")
-    
+
+def shitEnding():
+    typeWriterEffect(textSpeed, "\nLMAO, what did you think would happen?")
+    typeWriterEffect(textSpeed, "\nYou really thought they wouldn't find you? In the damn toilet?")
+    typeWriterEffect(textSpeed, "\nYou deserve to not only go to jail but also to eat shit.\n")
+    typeWriterEffect(0.001, shitEndingText)
+
 def jailEnding():
     typeWriterEffect(textSpeed, "\nYou were arrested and taken to jail for your actions.")
-    if name == "Girl":
+    if characterName == "Girl":
         typeWriterEffect(textSpeed, "\nThe girl you assaulted was taken to the hospital and treated for her injuries.")
     else:
         typeWriterEffect(textSpeed, f"\n{characterName}, who you assaulted, was taken to the hospital and treated for her injuries.")
@@ -340,10 +437,10 @@ def jailEnding():
 
 def safeEnding():
     typeWriterEffect(textSpeed, "\nYou: 'Sorry, I have to get going now. It was nice meeting you.\n")
-    if characterName == "Yuki":
-        typeWriterEffect(textSpeed, f"{characterName}: 'Likewise, take care {name}.\n")
-    else:
+    if characterName == "Girl":
         typeWriterEffect(textSpeed, f"{characterName}: 'Likewise, take care.\n")
+    else:
+        typeWriterEffect(textSpeed, f"{characterName}: 'Likewise, take care {name}.\n")
     typeWriterEffect(textSpeed, "\nAs the conversation comes to an end, a sense of satisfaction fills the air.")
     typeWriterEffect(textSpeed, "\nWith a smile, you gather your belongings, ready to bid the girl farewell.")
     typeWriterEffect(textSpeed, "\nAs you walk away, you carry the memory of this meaningful encounter, cherishing the magic of connection and the potential for something more.\n")
@@ -373,7 +470,6 @@ def gameMenu():
     menuChoice = input("\nChoose a number: ")
     if menuChoice == "1":
         subprocess.run("cls", shell=True)
-        console = Console()
         print("\n")
         with console.status("[bold green]Loading game...\n"):
                 time.sleep(3)
@@ -397,6 +493,8 @@ def gameMenu():
         typeWriterEffect(textSpeed, "\nFine...")
         time.sleep(1)
         exit()
+    elif menuChoice == "123":
+        developerOptions()
 
 #Game Structure
 gameMenu()
