@@ -1,9 +1,10 @@
 #Libraries
+import os
 import sys, subprocess
 import time
 from time import sleep
 from rich.console import Console
-import rich
+import pygame
 
 #ASCII Art and Text
 gameMenuText = r"""
@@ -125,6 +126,9 @@ stupidEndingText = r"""
 """
 
 #Variables
+script_dir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(script_dir)
+pygame.mixer.init()
 intro1 = "\nAs the final bell rings, you find yourself alone in the classroom with a girl who has chosen to stay behind."
 intro2 = "\nThe room is filled with quiet anticipation, and the afternoon sunlight casts a warm glow."
 intro3 = "\nIntrigued, you approach her, and she looks up, a smile of recognition crossing her face."
@@ -354,9 +358,15 @@ def runAway():
         shitEnding()
     elif runAwayChoice == "2":
         typeWriterEffect(textSpeed, "\nYou decide to jump out of the window to make a quick escape.")
-        typeWriterEffect(textSpeed, "\nYou successfully escape the school and run away to another location.")
-        typeWriterEffect(textSpeed, "\nYou are now a fugitive, running away from the authorities.")
-        return None
+        typeWriterEffect(textSpeed, "\nYou: 'Fuck it, I'll just have to jump out the fucking window.'")
+        typeWriterEffect(textSpeed, "\nYou run towards one of the open windows inside the classroom and take a great leap.")
+        typeWriterEffect(textSpeed, "\nThe air rushes past you as you freefall..")
+        typeWriterEffect(textSpeed, "\nYou feel the adrenaline coursing through your veins until..")
+        typeWriterEffect(textSpeed, "\nyou hit the ground... badly...")
+        typeWriterEffect(textSpeed, "\nYou scream as a wave of pain and agony washes over you.")
+        typeWriterEffect(textSpeed, "\nYou look down at your legs and you see them twisted and broken...")
+        typeWriterEffect(textSpeed, "\nYour bones were snapped, blood seeping from your wounds...\n")
+        wastedEnding()
     elif runAwayChoice == "3":
         guardStopsYou()
         
@@ -446,6 +456,19 @@ def shitEnding():
     typeWriterEffect(textSpeed, "\nYou deserve to not only go to jail but also to eat shit.\n")
     typeWriterEffect(0.01, shitEndingText)
     
+def wastedEnding():
+    typeWriterEffect(textSpeed, "\nAfter your fall, you were rushed to the hospital for emergency surgery.")
+    if characterName == "Girl":
+        typeWriterEffect(textSpeed, "\nThe girl you assaulted was taken to the hospital and treated for her injuries.")
+    else:
+        typeWriterEffect(textSpeed, f"\n{characterName}, who you assaulted, was taken to the hospital and treated for her injuries.")
+    typeWriterEffect(textSpeed, "\nHer parents pressed charges and you were sentenced to 10 years in prison.")
+    typeWriterEffect(textSpeed, "\nYou are now not only injured, but also registered sex offender " + name + "...")
+    typeWriterEffect(textSpeed, "\nYou were really stupid to jump out of the window, did you think your legs could take 5 stories?")
+    time.sleep(3)
+    typeWriterEffect(textSpeed, "\nDumbass...\n")
+    typeWriterEffect(0.01, wastedEndingText)
+    
 def escapedEnding():
     typeWriterEffect(0.01, jailEndingText)
 
@@ -491,6 +514,8 @@ def replayOrQuit():
 
 #Game Menu
 def gameMenu():
+    pygame.mixer.music.load("Whispers in the Hallway.mp3")
+    pygame.mixer.music.play(loops=-1)
     typeWriterEffect(0.0005, gameMenuText)
     menuChoice = input("\nChoose a number: ")
     if menuChoice == "1":
