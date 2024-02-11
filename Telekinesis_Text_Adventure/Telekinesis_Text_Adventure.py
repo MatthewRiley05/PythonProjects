@@ -1,10 +1,12 @@
 #Libraries
 import os
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import sys, subprocess
 import time
 from time import sleep
 from rich.console import Console
-import pygame
+from pygame import mixer
 
 #ASCII Art and Text
 gameMenuText = r"""
@@ -71,6 +73,14 @@ loadingSplashScreen = r"""
 ⠄⢈⠄⠂⠈⢀⠠⠄⠄⠠⠡⠠⠑⠨⠐⠨⡐⠡⡂⠄⡣⠐⠅⠕⠬⢦⢗⢿⡻⣻⣫⡯⣷⣳⡷⣿⣻⣟⣯⣷⣧⣯⣪⢳⣛⢾⣟⣿⢽⣻⢸⡂⠄⢰⢋⠸⡸⡘⡀⢅⢊⠄⡁⡈⡀⠠⠐⠄⠂⢀⠐⠄⡐⡠⡐
 ⠄⡀⡀⠂⠌⠠⠠⠡⠈⢌⠨⠈⠄⠨⡀⠅⠌⠌⠄⠂⡐⠨⡈⢪⠨⡂⡣⠳⣟⣿⡽⣿⡽⣷⢿⣻⡽⣯⣻⢽⣺⡾⣾⢷⣵⣱⢸⢩⠫⢮⢪⠆⠐⢸⡂⢪⠢⡊⠔⡐⡑⢌⢪⢐⢔⢐⠐⢈⠄⠠⠢⡑⢅⠢⡊
 """
+jailEndingText = r"""
+     ██╗ █████╗ ██╗██╗         ███████╗███╗   ██╗██████╗ ██╗███╗   ██╗ ██████╗     
+     ██║██╔══██╗██║██║         ██╔════╝████╗  ██║██╔══██╗██║████╗  ██║██╔════╝     
+     ██║███████║██║██║         █████╗  ██╔██╗ ██║██║  ██║██║██╔██╗ ██║██║  ███╗    
+██   ██║██╔══██║██║██║         ██╔══╝  ██║╚██╗██║██║  ██║██║██║╚██╗██║██║   ██║    
+╚█████╔╝██║  ██║██║███████╗    ███████╗██║ ╚████║██████╔╝██║██║ ╚████║╚██████╔╝    
+ ╚════╝ ╚═╝  ╚═╝╚═╝╚══════╝    ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝     
+"""
 shitEndingText = r"""
    .---. .-. .-.,-. _______   ,---.  .-. .-. ,'|"\   ,-..-. .-.  ,--,   
   ( .-._)| | | ||(||__   __|  | .-'  |  \| | | |\ \  |(||  \| |.' .'    
@@ -79,22 +89,6 @@ shitEndingText = r"""
 ( `-'  ) | | |)|| |   | |     |  `--.| | |)| /(|`-' /| || | |)| \  `-) )
  `----'  /(  (_)`-'   `-'     /( __.'/(  (_)(__)`--' `-'/(  (_) )\____/ 
         (__)                 (__)   (__)               (__)    (__)     
-"""
-safeEndingText = r"""
-  ________            _____       ____        ______          ___            
- /_  __/ /_  ___     / ___/____ _/ __/__     / ____/___  ____/ (_)___  ____ _
-  / / / __ \/ _ \    \__ \/ __ `/ /_/ _ \   / __/ / __ \/ __  / / __ \/ __ `/
- / / / / / /  __/   ___/ / /_/ / __/  __/  / /___/ / / / /_/ / / / / / /_/ / 
-/_/ /_/ /_/\___/   /____/\__,_/_/  \___/  /_____/_/ /_/\__,_/_/_/ /_/\__, /  
-                                                                    /____/   
-"""
-jailEndingText = r"""
-     ██╗ █████╗ ██╗██╗         ███████╗███╗   ██╗██████╗ ██╗███╗   ██╗ ██████╗     
-     ██║██╔══██╗██║██║         ██╔════╝████╗  ██║██╔══██╗██║████╗  ██║██╔════╝     
-     ██║███████║██║██║         █████╗  ██╔██╗ ██║██║  ██║██║██╔██╗ ██║██║  ███╗    
-██   ██║██╔══██║██║██║         ██╔══╝  ██║╚██╗██║██║  ██║██║██║╚██╗██║██║   ██║    
-╚█████╔╝██║  ██║██║███████╗    ███████╗██║ ╚████║██████╔╝██║██║ ╚████║╚██████╔╝    
- ╚════╝ ╚═╝  ╚═╝╚═╝╚══════╝    ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝     
 """
 wastedEndingText = r"""
  █     █░ ▄▄▄        ██████ ▄▄▄█████▓▓█████ ▓█████▄    ▓█████  ███▄    █ ▓█████▄  ██▓ ███▄    █   ▄████ 
@@ -116,6 +110,14 @@ escapedEndingText = r'''
 _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
 "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'./o--000'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
 '''
+safeEndingText = r"""
+  ________            _____       ____        ______          ___            
+ /_  __/ /_  ___     / ___/____ _/ __/__     / ____/___  ____/ (_)___  ____ _
+  / / / __ \/ _ \    \__ \/ __ `/ /_/ _ \   / __/ / __ \/ __  / / __ \/ __ `/
+ / / / / / /  __/   ___/ / /_/ / __/  __/  / /___/ / / / /_/ / / / / / /_/ / 
+/_/ /_/ /_/\___/   /____/\__,_/_/  \___/  /_____/_/ /_/\__,_/_/_/ /_/\__, /  
+                                                                    /____/   
+"""
 stupidEndingText = r"""
    _                               __ _               _     _ ___     __          _ _             
   /_\  _ __ ___  /\_/\___  _   _  / _\ |_ _   _ _ __ (_) __| / _ \   /__\ __   __| (_)_ __   __ _ 
@@ -128,12 +130,12 @@ stupidEndingText = r"""
 #Variables
 script_dir = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_dir)
-pygame.mixer.init()
+mixer.init()
 intro1 = "\nAs the final bell rings, you find yourself alone in the classroom with a girl who has chosen to stay behind."
 intro2 = "\nThe room is filled with quiet anticipation, and the afternoon sunlight casts a warm glow."
 intro3 = "\nIntrigued, you approach her, and she looks up, a smile of recognition crossing her face."
 intro4 = "\nIn that moment, you sense the beginning of something where every choice you make will shape the narrative of your story.\n"
-end = "\nThank you for playing Gakko Kinesis. Goodbye.\n"
+end = "\nThank you for playing Gakko Kinesis. Made by Matthew Raymundo and Inspired by the Goat. Goodbye\n"
 name = ""
 characterName = "Girl"
 textSpeed = 0.05
@@ -190,20 +192,21 @@ def developerOptions():
     textSpeed = 0
     time.sleep(1)
     print("\nWhich scene would you like to skip to?")
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n1. Initial Conversation")
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n2. Action Scene 1")
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n3. Flustered Scene")
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n4. Shouts for Help Scene") 
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n5. Run Away Scene")
-    time.sleep(0.5)
+    time.sleep(0.3)
     print("\n6. Small Talk Scene")
-    time.sleep(0.5)
+    time.sleep(0.3)
     skipChoice = input(typeWriterEffect(textSpeed, "\nChoose a number: "))
+    print("\n")
     if skipChoice == "1":
         applyDeveloperOptions()
         introductoryConversation()
@@ -226,22 +229,26 @@ def developerOptions():
 def applyDeveloperOptions():
     with console.status("[bold green]Developer options being applied...[/bold green]", spinner="material") as status:
         time.sleep(3)
-    console.print("\n[bold green]Developer options applied successfully.[bold green]\n")
+    console.print("[bold green]Developer options applied successfully.[bold green]\n")
     time.sleep(1)
+    subprocess.run("cls", shell=True)
 
 #Story Functions
-def gameStart():
+def gameIntro():
     global name
     name = input("What is your name? ")
     time.sleep(1)
     print("\nHello, " + name + ".")
     time.sleep(1)
     print("\nYou have been given the gift of telekinesis, the ability to move objects with your mind. ")
-    time.sleep(3)
+    time.sleep(1)
     print("\nYou are about to embark on a journey that will test the limits of your power. ")
-    time.sleep(3)
+    time.sleep(1)
     print("\nYour choices will determine the outcome of your story.\n")
-    time.sleep(3)
+    time.sleep(1)
+    readyPrompt()
+        
+def readyPrompt():
     ready = input(typeWriterEffect(textSpeed, "Are you ready to begin? "))
     if ready.lower() == "yes":
         print("\nLet's begin.")
@@ -249,13 +256,25 @@ def gameStart():
         subprocess.run("cls", shell=True)
         typeWriterEffect(textSpeed, intro1 + intro2 + intro3 + intro4)
         introductoryConversation()
-    else:
-        print("\nGoodbye.")
+    elif ready.lower() == "no":
+        typeWriterEffect(textSpeed, "\nWhy'd you even start the game then...")
+        time.sleep(1)
+        typeWriterEffect(0.5, "\nDumbass")
         time.sleep(1)
         exit()
+    else:
+        typeWriterEffect(textSpeed, "\nTf are you sayin bro?")
+        time.sleep(1)
+        typeWriterEffect(textSpeed, "\nLet's try that again shall we?")
+        time.sleep(3)
+        subprocess.run("cls", shell=True)
+        readyPrompt()
         
 def introductoryConversation():
     global characterName
+    mixer.music.fadeout(1000)
+    mixer.music.load("Music/Enchanting Serenade.mp3")
+    mixer.music.play(-1)
     typeWriterEffect(textSpeed, "\nThe girl sits at her desk, her presence commanding attention in the otherwise empty classroom.")
     typeWriterEffect(textSpeed, "\nShe possesses an ethereal beauty that seems to defy description—a Japanese heritage evident in her delicate features and porcelain skin, as white as freshly fallen snow.")
     typeWriterEffect(textSpeed, "\nHer ebony hair is like a cascade of silk, flowing effortlessly down her back, contrasting beautifully against her fair complexion.")
@@ -400,17 +419,18 @@ def smallTalk():
     typeWriterEffect(textSpeed, "\n3. Talk about how you are a racist\n")
     smallTalkTopic = input(typeWriterEffect(textSpeed, "\nWhich one will you choose? "))
     if smallTalkTopic == "1":
-        typeWriterEffect(textSpeed, "\nYou: 'So, what are your hobbies? You seem like the type of person who likes to read and draw. Am I right?'")
-        typeWriterEffect(textSpeed, f"\n{characterName}: 'Haha, you're right. I do like to read and draw. What about you? What are your hobbies?")
-        typeWriterEffect(textSpeed, "\nYou: 'I love writing and playing video games. I'm currently writing a romance novel. I also like to play the piano when I have time.'")
-        typeWriterEffect(textSpeed, f"\n{characterName}: Wow, we have Mr. Talented over here.\n")
-        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+        mixer.music.fadeout(1000)
+        mixer.music.load("Music/Shared Passions.mp3")
+        mixer.music.play(-1)
+        typeWriterEffect(textSpeed, "\n\n\nYou: 'So, what are your hobbies? You seem like the type of person who likes to read and draw. Am I right?'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Haha, you're right. I do like to read and draw. What about you? What are your hobbies?\n")
+        hobbiesSmallTalk()
         talkAboutMore()
     elif smallTalkTopic == "2":
-        typeWriterEffect(textSpeed, "\nYou: 'Hey, I noticed that you have an anime keychain. Do you like anime?'")
+        typeWriterEffect(textSpeed, "\nYou: 'Hey, I noticed that you have an anime keychain in your bag. Do you like anime?'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Oh definitely! I love anime, I've been watching it since I was a kid. What about you?'")
-        typeWriterEffect(textSpeed, "\nYou: 'I like anime too. I've been watching it for a while now. Which one's your favorite?'")
-        typeWriterEffect(textSpeed, f"\n{characterName}: 'Well, I recently finished Gintama and it made me laugh a lot so I guess that's my favorite for now. What about you?'\n")
+        typeWriterEffect(textSpeed, "\nYou: 'I really like anime too. I've been watching it for a while now. Which one's your favorite?'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Well, I recently finished Gintama and it made me laugh a lot so I guess that's my favorite for now. What about yours?'\n")
         animeSmallTalk()
         talkAboutMore()
     elif smallTalkTopic == "3":
@@ -429,7 +449,50 @@ def talkAboutMore():
         smallTalk()
     elif talkAboutMoreChoice == "2":
         safeEnding()
-        
+
+def hobbiesSmallTalk():
+    print("\n\n\nWhat are your hobbies?")
+    time.sleep(1)
+    print("\n1. Playing video games")
+    time.sleep(1)
+    print("\n2. Photography")
+    time.sleep(1)
+    print("\n3. Playing the piano")
+    time.sleep(1)
+    print("\n4. Moderating a Discord server")
+    time.sleep(1)
+    hobbiesChoice = input(typeWriterEffect(textSpeed, "\nWhich one will you choose? "))
+    if hobbiesChoice == "1":
+        typeWriterEffect(textSpeed, "\nYou: 'Right now, I really like playing video games, sometimes competitively, sometimes with friends.'")
+        typeWriterEffect(textSpeed, "\nYou: 'I've even been able to play in some competitive esports tournaments.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Interesting, I rarely play video games because there's so much stuff to do for school.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Well I'm playing to get a potential profession out of it so I make time for gaming.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'It's good that you are already thinking about your future.\n'")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+    elif hobbiesChoice == "2":
+        typeWriterEffect(textSpeed, "\nYou: 'Photography is one of my main hobbies.'")
+        typeWriterEffect(textSpeed, "\nYou: 'I really love preserving the beauty and the memories of this world.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Ooohhh, photography huh, you must be really creative for that.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Maybe you could take pictures of me next time for my Instagram posts hahaha.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Well sure, why not? It would be a good opportunity for me to practice while you get free pictures.\n'")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+    elif hobbiesChoice == "3":
+        typeWriterEffect(textSpeed, "\nYou: 'I started learning how to play the piano a few years back, so that's probably one of my hobbies right now.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Ahh, so you're the musically inclined type. Music is definitely not my strength.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Don't be so negative, music can be learned. You just need a ton of practice for sure.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'I'm really horrible at reading music notes, I gave up a long time ago hahaha.\n'")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+    elif hobbiesChoice == "4":
+        typeWriterEffect(textSpeed, "\nYou: 'Uhhmm actually, I have a job already.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Okay wow, so what is it?'")
+        typeWriterEffect(textSpeed, "\nYou: 'Well, I don't want to brag but I'm one of the moderators for the Roblox Discord server.'")
+        typeWriterEffect(textSpeed, "\nShe suddenly bursts into laughter")
+        typeWriterEffect(textSpeed, f"\nYou: 'Wait wait hold on, you're—a Discord mod???'")
+        typeWriterEffect(textSpeed, "\nYou: 'Yeah? What's wrong about that?'")
+        typeWriterEffect(textSpeed, "\nYou: 'That's actually disgusting, I bet you don't shower. Please don't talk to me ever again.'")
+        discordModEnding()
+    
+
 def animeSmallTalk():
     print("\n\n\nWhich anime is your favorite?")
     time.sleep(1)
@@ -448,8 +511,8 @@ def animeSmallTalk():
         typeWriterEffect(textSpeed, "\nYou: 'Just keep watching, it gets wayyyy better when Luffy unlocks his next form!'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Heyyyy, no spoilers! I'm only at the part where they're at Dressrosa.'")
         typeWriterEffect(textSpeed, "\nYou: 'HAHAHAHAHAHA, I'm sorry but just keep watching I promise it becomes so good!'\n")
-        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about One Piece as the sun starts to set...\n")
-
+    typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your favorite anime as the sun starts to set...\n")
+    
 def shitEnding():
     typeWriterEffect(textSpeed, "\nLMAO, what did you think would happen?")
     typeWriterEffect(textSpeed, "\nYou really thought they wouldn't find you? In the damn toilet?")
@@ -470,7 +533,7 @@ def wastedEnding():
     typeWriterEffect(0.01, wastedEndingText)
     
 def escapedEnding():
-    typeWriterEffect(0.01, jailEndingText)
+    typeWriterEffect(0.01, escapedEndingText)
 
 def jailEnding():
     typeWriterEffect(textSpeed, "\nYou were arrested and taken to jail for your actions.")
@@ -493,6 +556,11 @@ def safeEnding():
     typeWriterEffect(textSpeed, "\nWith a smile, you gather your belongings, ready to bid the girl farewell.")
     typeWriterEffect(textSpeed, "\nAs you walk away, you carry the memory of this meaningful encounter, cherishing the magic of connection and the potential for something more.\n")
     typeWriterEffect(0.01, safeEndingText)
+
+def discordModEnding():
+    typeWriterEffect(textSpeed, "\nYour dumbass really told a girl that you were a Discord mod...")
+    typeWriterEffect(textSpeed, "\nYou deserve no bitches for life.")
+    typeWriterEffect(0.01, None)
     
 def stupidEnding():
     typeWriterEffect(textSpeed, f"\nWhy would you even do that {name}? You are a disgrace to humanity.\n")
@@ -514,8 +582,8 @@ def replayOrQuit():
 
 #Game Menu
 def gameMenu():
-    pygame.mixer.music.load("Whispers in the Hallway.mp3")
-    pygame.mixer.music.play(loops=-1)
+    mixer.music.load("Music/Whispers in the Hallway.mp3")
+    mixer.music.play(loops=-1)
     typeWriterEffect(0.0005, gameMenuText)
     menuChoice = input("\nChoose a number: ")
     if menuChoice == "1":
@@ -529,7 +597,7 @@ def gameMenu():
         typeWriterEffect(0.001, loadingSplashScreen)
         time.sleep(1)
         subprocess.run("cls", shell=True)
-        gameStart()
+        gameIntro()
     elif menuChoice == "2":
         subprocess.run("cls", shell=True)
         settingsPage()
