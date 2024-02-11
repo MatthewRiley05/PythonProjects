@@ -110,6 +110,17 @@ escapedEndingText = r'''
 _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
 "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'./o--000'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
 '''
+discordModEndingText = r"""
+ (                               *                                                 
+ )\ )                   (      (  `         (                 (                    
+(()/( (            (    )\ )   )\))(        )\ )   (          )\ ) (        (  (   
+ /(_)))\ (   (  (  )(  (()/(  ((_)()\  (   (()/(   )\   (    (()/( )\  (    )\))(  
+(_))_((_))\  )\ )\(()\  ((_)) (_()((_) )\   ((_)) ((_)  )\ )  ((_)|(_) )\ )((_))\  
+ |   \(_|(_)((_|(_)((_) _| |  |  \/  |((_)  _| |  | __|_(_/(  _| | (_)_(_/( (()(_) 
+ | |) | (_-< _/ _ \ '_/ _` |  | |\/| / _ \/ _` |  | _|| ' \)) _` | | | ' \)) _` |  
+ |___/|_/__|__\___/_| \__,_|  |_|  |_\___/\__,_|  |___|_||_|\__,_| |_|_||_|\__, |  
+                                                                           |___/   
+"""
 safeEndingText = r"""
   ________            _____       ____        ______          ___            
  /_  __/ /_  ___     / ___/____ _/ __/__     / ____/___  ____/ (_)___  ____ _
@@ -117,6 +128,13 @@ safeEndingText = r"""
  / / / / / /  __/   ___/ / /_/ / __/  __/  / /___/ / / / /_/ / / / / / /_/ / 
 /_/ /_/ /_/\___/   /____/\__,_/_/  \___/  /_____/_/ /_/\__,_/_/_/ /_/\__, /  
                                                                     /____/   
+"""
+awkwardEndingText = r"""
+ _____       _                   _       _____       _ _         
+|  _  |_ _ _| |_ _ _ _ ___ ___ _| |     |   __|___ _| |_|___ ___ 
+|     | | | | '_| | | | .'|  _| . |_ _ _|   __|   | . | |   | . |
+|__|__|_____|_,_|_____|__,|_| |___|_|_|_|_____|_|_|___|_|_|_|_  |
+                                                            |___|
 """
 stupidEndingText = r"""
    _                               __ _               _     _ ___     __          _ _             
@@ -199,11 +217,17 @@ def developerOptions():
     time.sleep(0.3)
     print("\n3. Flustered Scene")
     time.sleep(0.3)
-    print("\n4. Shouts for Help Scene") 
+    print("\n4. Shouts for Help") 
     time.sleep(0.3)
-    print("\n5. Run Away Scene")
+    print("\n5. Run Away")
     time.sleep(0.3)
-    print("\n6. Small Talk Scene")
+    print("\n6. Guard stops you")
+    time.sleep(0.3)
+    print("\n7. Guard doesn't believe you")
+    time.sleep(0.3)
+    print("\n8. Talk about hobbies")
+    time.sleep(0.3)
+    print("\n9. Talk about anime")
     time.sleep(0.3)
     skipChoice = input(typeWriterEffect(textSpeed, "\nChoose a number: "))
     print("\n")
@@ -225,6 +249,15 @@ def developerOptions():
     elif skipChoice == "6":
         applyDeveloperOptions()
         smallTalk()
+    elif skipChoice == "7":
+        applyDeveloperOptions()
+        return None
+    elif skipChoice == "8":
+        applyDeveloperOptions()
+        hobbiesSmallTalk()
+    elif skipChoice == "9":
+        applyDeveloperOptions()
+        animeSmallTalk()
         
 def applyDeveloperOptions():
     with console.status("[bold green]Developer options being applied...[/bold green]", spinner="material") as status:
@@ -304,6 +337,9 @@ def introductoryConversation():
         actionScene1()
 
 def actionScene1():
+    mixer.music.fadeout(1000)
+    mixer.music.load("Music/Serenade of the Sakura Blossoms.mp3")
+    mixer.music.play(-1)
     if characterName == "Girl":
         typeWriterEffect(textSpeed, "\n\n\nAs you continue to converse with the girl, you decided on what lewd action to take next—whether to use your telekinesis powers or not.\n")
     else:
@@ -427,14 +463,19 @@ def smallTalk():
         hobbiesSmallTalk()
         talkAboutMore()
     elif smallTalkTopic == "2":
-        typeWriterEffect(textSpeed, "\nYou: 'Hey, I noticed that you have an anime keychain in your bag. Do you like anime?'")
+        mixer.fadeout(1000)
+        mixer.music.load("Music/Anime Love's Melody.mp3")
+        mixer.music.play(-1)
+        typeWriterEffect(textSpeed, "\n\n\nYou: 'Hey, I noticed that you have an anime keychain in your bag. Do you like anime?'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Oh definitely! I love anime, I've been watching it since I was a kid. What about you?'")
         typeWriterEffect(textSpeed, "\nYou: 'I really like anime too. I've been watching it for a while now. Which one's your favorite?'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Well, I recently finished Gintama and it made me laugh a lot so I guess that's my favorite for now. What about yours?'\n")
         animeSmallTalk()
-        talkAboutMore()
     elif smallTalkTopic == "3":
-        typeWriterEffect(textSpeed, "\nYou: 'I'm a racist.'")
+        mixer.fadeout(1000)
+        mixer.music.load("Music/You Gotta Move.mp3")
+        mixer.music.play()
+        typeWriterEffect(textSpeed, "\n\n\nYou: 'I'm a racist.'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'That is very concerning. I don't think we should talk anymore. Goodbye.")
         typeWriterEffect(textSpeed, "\nYou: 'Wait, I didn't mean it like that! I'm sorry!\n'")
         typeWriterEffect(textSpeed, "\nShe leaves the room and you are left alone, feeling a sense of regret and disappointment.\n")
@@ -469,6 +510,7 @@ def hobbiesSmallTalk():
         typeWriterEffect(textSpeed, "\nYou: 'Well I'm playing to get a potential profession out of it so I make time for gaming.'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'It's good that you are already thinking about your future.\n'")
         typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+        talkAboutMore()
     elif hobbiesChoice == "2":
         typeWriterEffect(textSpeed, "\nYou: 'Photography is one of my main hobbies.'")
         typeWriterEffect(textSpeed, "\nYou: 'I really love preserving the beauty and the memories of this world.'")
@@ -476,12 +518,14 @@ def hobbiesSmallTalk():
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Maybe you could take pictures of me next time for my Instagram posts hahaha.'")
         typeWriterEffect(textSpeed, "\nYou: 'Well sure, why not? It would be a good opportunity for me to practice while you get free pictures.\n'")
         typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+        talkAboutMore()
     elif hobbiesChoice == "3":
         typeWriterEffect(textSpeed, "\nYou: 'I started learning how to play the piano a few years back, so that's probably one of my hobbies right now.'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Ahh, so you're the musically inclined type. Music is definitely not my strength.'")
         typeWriterEffect(textSpeed, "\nYou: 'Don't be so negative, music can be learned. You just need a ton of practice for sure.'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'I'm really horrible at reading music notes, I gave up a long time ago hahaha.\n'")
         typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your hobbies for a while...\n")
+        talkAboutMore()
     elif hobbiesChoice == "4":
         typeWriterEffect(textSpeed, "\nYou: 'Uhhmm actually, I have a job already.'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Okay wow, so what is it?'")
@@ -511,14 +555,52 @@ def animeSmallTalk():
         typeWriterEffect(textSpeed, "\nYou: 'Just keep watching, it gets wayyyy better when Luffy unlocks his next form!'")
         typeWriterEffect(textSpeed, f"\n{characterName}: 'Heyyyy, no spoilers! I'm only at the part where they're at Dressrosa.'")
         typeWriterEffect(textSpeed, "\nYou: 'HAHAHAHAHAHA, I'm sorry but just keep watching I promise it becomes so good!'\n")
-    typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your favorite anime as the sun starts to set...\n")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your favorite anime as the sun starts to set...\n")
+        talkAboutMore()
+    elif animeChoice == "2":
+        typeWriterEffect(textSpeed, "\nYou: 'Jujutsu Kaisen is my favorite, I was skeptical at first but it's really good.'")
+        typeWriterEffect(textSpeed, "\nYou: 'I tried watching the first season first then I got so hooked that I'm now caught up to the manga.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'By any chance, are you part of r/Jujutsufolk?'")
+        typeWriterEffect(textSpeed, "\nYou: 'Yeah, I'm a part of that subreddit, it's too funny to not be a part of it.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Ahhh I see, you're a Jujutsufolker too. Well, I hope Gojo uses Lime Green when he comes back.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Yep, but will he stand proud because of Lime Green, or does he have Lime Green because he's standing proud?'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Hahahaha, I think he's simply Him'")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your favorite anime as the sun starts to set...\n")
+        talkAboutMore()
+    elif animeChoice == "3":
+        typeWriterEffect(textSpeed, "\nYou: 'Gintama is also my favorite, it's a really funny anime that I can't stop laughing at.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Mannn, Gintama is sooo good. It feels nostalgic thinking about it now.'")
+        typeWriterEffect(textSpeed, "\nYou: 'It's like the first anime that really made me physically laugh out loud. It's definitely a hidden gem.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Yeah for sure, more people should watch it. I'm glad I found someone who also likes Gintama.'")
+        typeWriterEffect(textSpeed, "\nYou: 'I never would've thought I'd meet someone who also likes Gintama, we're a rare breed.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Well, at least we know each other now, hahahaha.'\n")
+        typeWriterEffect(textSpeed, "\nBoth of you continue to talk about your favorite anime as the sun starts to set...\n")
+        talkAboutMore()
+    elif animeChoice == "4":
+        typeWriterEffect(textSpeed, "\nYou: 'I don't watch anime.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'Oh, that's okay. I guess we can talk about something else.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Yeah, I'm sorry. I don't really like anime that much.'")
+        typeWriterEffect(textSpeed, f"\n{characterName}: 'It's fine, I'm sure we can find something else to talk about.'")
+        typeWriterEffect(textSpeed, "\nYou: 'Yeah, I'm sure we can...'\n")
+        awkwardEnding()
+
+def jailEnding():
+    typeWriterEffect(textSpeed, "\nYou were arrested and taken to jail for your actions.")
+    if characterName == "Girl":
+        typeWriterEffect(textSpeed, "\nThe girl you assaulted was taken to the hospital and treated for her injuries.")
+    else:
+        typeWriterEffect(textSpeed, f"\n{characterName}, who you assaulted, was taken to the hospital and treated for her injuries.")
+    typeWriterEffect(textSpeed, "\nHer parents pressed charges and you were sentenced to 10 years in prison.")
+    typeWriterEffect(textSpeed, "\nYou are now a registered sex offender " + name + "...")
+    typeWriterEffect(textSpeed, "\nTake some time to reflect on your actions and think about what you've done.\n")
+    typeWriterEffect(0.01, jailEndingText)
     
 def shitEnding():
     typeWriterEffect(textSpeed, "\nLMAO, what did you think would happen?")
     typeWriterEffect(textSpeed, "\nYou really thought they wouldn't find you? In the damn toilet?")
     typeWriterEffect(textSpeed, "\nYou deserve to not only go to jail but also to eat shit.\n")
     typeWriterEffect(0.01, shitEndingText)
-    
+
 def wastedEnding():
     typeWriterEffect(textSpeed, "\nAfter your fall, you were rushed to the hospital for emergency surgery.")
     if characterName == "Girl":
@@ -531,20 +613,14 @@ def wastedEnding():
     time.sleep(3)
     typeWriterEffect(textSpeed, "\nDumbass...\n")
     typeWriterEffect(0.01, wastedEndingText)
-    
+
 def escapedEnding():
     typeWriterEffect(0.01, escapedEndingText)
 
-def jailEnding():
-    typeWriterEffect(textSpeed, "\nYou were arrested and taken to jail for your actions.")
-    if characterName == "Girl":
-        typeWriterEffect(textSpeed, "\nThe girl you assaulted was taken to the hospital and treated for her injuries.")
-    else:
-        typeWriterEffect(textSpeed, f"\n{characterName}, who you assaulted, was taken to the hospital and treated for her injuries.")
-    typeWriterEffect(textSpeed, "\nHer parents pressed charges and you were sentenced to 10 years in prison.")
-    typeWriterEffect(textSpeed, "\nYou are now a registered sex offender " + name + "...")
-    typeWriterEffect(textSpeed, "\nTake some time to reflect on your actions and think about what you've done.\n")
-    typeWriterEffect(0.01, jailEndingText)
+def discordModEnding():
+    typeWriterEffect(textSpeed, "\nYour dumbass really told a girl that you were a Discord mod...")
+    typeWriterEffect(textSpeed, "\nYou deserve no bitches for life.")
+    typeWriterEffect(0.01, None)
 
 def safeEnding():
     typeWriterEffect(textSpeed, "\nYou: 'Sorry, I have to get going now. It was nice meeting you.\n")
@@ -557,10 +633,10 @@ def safeEnding():
     typeWriterEffect(textSpeed, "\nAs you walk away, you carry the memory of this meaningful encounter, cherishing the magic of connection and the potential for something more.\n")
     typeWriterEffect(0.01, safeEndingText)
 
-def discordModEnding():
-    typeWriterEffect(textSpeed, "\nYour dumbass really told a girl that you were a Discord mod...")
-    typeWriterEffect(textSpeed, "\nYou deserve no bitches for life.")
-    typeWriterEffect(0.01, None)
+def awkwardEnding():
+    typeWriterEffect(textSpeed, "\nOops, that was kinda awkward...")
+    typeWriterEffect(textSpeed, "\nYa'll didn't know what to talk about afterwards so you just left lmao...")
+    typeWriterEffect(0.01, awkwardEndingText)
     
 def stupidEnding():
     typeWriterEffect(textSpeed, f"\nWhy would you even do that {name}? You are a disgrace to humanity.\n")
